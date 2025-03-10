@@ -21,7 +21,7 @@ def buildDocker() {
 def pushDocker() {
   echo "Pushing image to dockerhub repo... "
     withCredentials([
-        usernamePassword(credentialsId:'a967aeaf-43d9-49de-a9a1-5725c0918685', usernameVariable: "USER", passwordVariable: "PWD" )
+        usernamePassword(credentialsId:'docker-hub', usernameVariable: "USER", passwordVariable: "PWD" )
         ]){
             sh """
                 echo $PWD | docker login -u $USER --password-stdin
@@ -34,7 +34,7 @@ def pushDocker() {
 def commitToRepo() {
     echo "Commiting to git repo..."
     withCredentials([
-    usernamePassword(credentialsId:'a30f485a-77fe-4892-bbd8-4cbbeb4f93a9', usernameVariable: "USER", passwordVariable: "PWD" )
+    usernamePassword(credentialsId:'gitlab-login', usernameVariable: "USER", passwordVariable: "PWD" )
     ]){
         sh """
             git config --global user.email "jenkins@example.com"
