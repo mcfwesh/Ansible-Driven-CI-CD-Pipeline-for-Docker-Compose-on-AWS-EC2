@@ -1,7 +1,5 @@
 services:
   maven-app:
-    image: mcfwesh/java-maven-app:${IMAGE_NAME}
+    image: mcfwesh/java-maven-app:VERSION
     ports:
       - "8080:8080"
-
-

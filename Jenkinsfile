@@ -3,7 +3,8 @@ def gv
 pipeline {
     agent any
     environment {
-        ANSIBLE_SERVER = "146.190.248.126"
+        ANSIBLE_SERVER = "138.197.171.181"
+        VERSION = "1.1.20-21"
     }
     stages {
         stage('init') {

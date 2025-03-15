@@ -44,12 +44,14 @@
   vars_files:
     - project_vars
   tasks:
-    - name: Copy docker-compose file to server
-      copy:
-        src: /root/docker-compose.yaml
+    - name: Substitute template and copy docker-compose file to server
+      template:
+        src: /root/docker-compose.yaml.j2
         dest: /home/{{remote_user}}/docker-compose.yaml
+      vars:
+        version: "{{ version }}"
     - name: Login to docker
-      docker_login:
+      community.docker.docker_login:
         username: mcfwesh
         password: "{{docker_password}}"
     - name: Start container
