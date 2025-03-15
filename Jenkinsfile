@@ -1,6 +1,10 @@
 def gv
 
 pipeline {
+    agent any
+    environment {
+        ANSIBLE_SERVER = "146.190.248.126"
+    }
 
         stage('init') {
             steps {
