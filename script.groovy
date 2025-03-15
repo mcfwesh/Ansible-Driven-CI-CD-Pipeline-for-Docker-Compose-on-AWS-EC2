@@ -1,7 +1,7 @@
 def copyFilesToAnsibleServer() {
     echo "Copying ansible folder to ansibe connection server..."
 
-    sshAgent(['ansible-server']) {
+    sshagent(['ansible-server']) {
         sh 'scp -o StrictHostKeyChecking=no ansible/* root@$ANSIBLE_SERVER:/root'
         sh 'scp -o StrictHostKeyChecking=no docker-compose.yml root@$ANSIBLE_SERVER:/root'
 
