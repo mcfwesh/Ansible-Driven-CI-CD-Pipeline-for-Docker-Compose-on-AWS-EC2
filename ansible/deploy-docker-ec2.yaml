@@ -1,0 +1,57 @@
+---
+- name: Download, install and start docker and docker-compose
+  hosts: env_dev
+  become: True
+  tasks:
+    - command: uname -m
+      register: server_arch
+    - name: Install docker
+      yum:
+        pkg:
+          - docker
+          - acl
+    - name: Create docker-compose directory
+      file:
+        path: /usr/local/lib/docker/cli-plugins
+        state: directory
+    - name: Download docker compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/v2.20.3/docker-compose-linux-{{server_arch.stdout}}"
+        dest: /usr/local/lib/docker/cli-plugins/docker-compose
+        mode: +x
+    - name: Start docker
+      systemd:
+        name: docker
+        state: started
+
+- name: Create new user, and add to docker group
+  hosts: env_dev
+  become: True
+  vars_files:
+    - project_vars
+  tasks:
+    - name: Create new user (or modify) and add to docker group
+      user:
+        name: "{{remote_user}}"
+        groups: adm,docker
+        append: true
+        comment: docker user
+
+- name: Start docker container
+  hosts: env_dev
+  become: True
+  become_user: "{{remote_user}}"
+  vars_files:
+    - project_vars
+  tasks:
+    - name: Copy docker-compose file to server
+      copy:
+        src: /root/docker-compose.yaml
+        dest: /home/{{remote_user}}/docker-compose.yaml
+    - name: Login to docker
+      docker_login:
+        username: mcfwesh
+        password: "{{docker_password}}"
+    - name: Start container
+      community.docker.docker_compose_v2:
+        project_src: /home/{{remote_user}}
