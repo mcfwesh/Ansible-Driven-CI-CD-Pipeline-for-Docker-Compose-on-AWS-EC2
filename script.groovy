@@ -1,60 +1,29 @@
-def incrementVersion() {
-    echo "Incrementing version..."
-    sh 'mvn build-helper:parse-version versions:set \
-        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
-        versions:commit'
-    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
-    def version = matcher[0][1]
-    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
-}
+def copyFilesToAnsibleServer() {
+    echo "Copying ansible folder to ansibe connection server..."
 
-def buildJar() {
-    echo "Building the app...."
-    sh 'mvn clean package'
-}
+    sshAgent(['ansible-server']) {
+        sh 'scp -o StrictHostKeyChecking=no ansible/* root@146.190.248.126:/root'
+        sh 'scp -o StrictHostKeyChecking=no docker-compose.yml root@146.190.248.126:/root'
 
-def buildDocker() {
-    echo "Building the image...."
-     sh "docker build -t mcfwesh/java-maven-app:$IMAGE_NAME ."
-}
-
-def pushDocker() {
-  echo "Pushing image to dockerhub repo... "
-    withCredentials([
-        usernamePassword(credentialsId:'docker-hub', usernameVariable: "USER", passwordVariable: "PWD" )
-        ]){
-            sh """
-                echo $PWD | docker login -u $USER --password-stdin
-                docker push mcfwesh/java-maven-app:$IMAGE_NAME
-            """
+        withCredentials([sshUserPrivateKey(credentialsId: 'docker-ec2-server', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'USER')]) {
+            sh 'scp -o StrictHostKeyChecking=no $SSH_KEY_FILE  root@146.190.248.126:/root/ssh_key'
         }
-    echo "Pushing completed!"
-}
-
-def commitToRepo() {
-    echo "Commiting to git repo..."
-    withCredentials([
-    usernamePassword(credentialsId:'gitlab-login', usernameVariable: "USER", passwordVariable: "PWD" )
-    ]){
-        sh """
-            git config --global user.email "jenkins@example.com"
-            git config --global user.name "jenkins"
-            git remote set-url origin https://${USER}:${PWD}@gitlab.com/mcfwesh/jenkins-java-maven-app.git
-            git add .
-            git commit -m "ci: incrementing version"
-            git push origin HEAD:jenkins-jobs
-        """
     }
 }
 
-def deployViaEC2() {
-    def buildContainer = "bash ./server-cmds.sh ${IMAGE_NAME}"
-    sshagent(['ec2-access']) {
-        sh """
-            scp docker-compose.yml ec2-user@44.210.87.216:/home/ec2-user
-            scp server-cmds.sh ec2-user@44.210.87.216:/home/ec2-user
-            ssh -o StrictHostKeyChecking=no ec2-user@44.210.87.216 ${buildContainer}
-        """
+def executeAnsible() {
+    def remote = [:]
+    remote.name = 'ansible server'
+    remote.host = '146.190.248.126'
+    remote.allowAnyHosts = true
+
+    withCredentials([sshUserPrivateKey(credentialsId: 'docker-ec2-server', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'USER')]) {
+        remote.user = USER
+        remote.identityFile = SSH_KEY_FILE
+        echo "Testing ssh pipeline steps"
+        sshCommand remote: remote, script: "prepare-ansible-server.sh"
+        sshCommand remote: remote, command: 'ls -l'
+        echo "Ansible playbook run successful!"
     }
 }
 

@@ -1,18 +1,7 @@
 def gv
-pipeline{
 
-    agent any
+pipeline {
 
-    tools {
-        maven 'maven-3.9'
-    }
-
-    // parameters {
-    //     choice(name: 'VERSION', description: 'App version', choices:['1.1', '1.2', '1.3'])
-    //     booleanParam(name: 'executeTests', description: 'Test Exec', defaultValue: true)
-    // }
-
-    stages {
         stage('init') {
             steps {
                 script {
@@ -20,55 +9,18 @@ pipeline{
                 }
             }
         }
-
-        stage('increment') {
+        stage('copy files to ansible server') {
             steps {
                 script {
-                    gv.incrementVersion()
+                    gv.copyFilesToAnsibleServer()
                 }
             }
         }
-
-        stage('build jar file'){
-            steps {
-               script {
-                gv.buildJar()
-               }
-            }
-        }
-
-        stage('build docker image') {
-
-            steps {
-               script {
-                gv.buildDocker()
-               }
-            }
-        }
-
-        stage('push docker image'){
-            steps {
-               script {
-                    gv.pushDocker()
-               }
-
-            }
-        }
-
-        stage('aws ec2 build container!') {
+        stage('run ansible playbook') {
             steps {
                 script {
-                    gv.deployViaEC2()
+                    gv.executeAnsible()
                 }
             }
         }
-
-        stage('commit to repo') {
-            steps {
-                script {
-                    gv.commitToRepo()
-                }
-            }
-        }
-    }
 }
