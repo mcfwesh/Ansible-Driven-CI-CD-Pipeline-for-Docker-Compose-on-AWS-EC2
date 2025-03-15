@@ -5,7 +5,7 @@ pipeline {
     environment {
         ANSIBLE_SERVER = "146.190.248.126"
     }
-
+    stages {
         stage('init') {
             steps {
                 script {
@@ -27,4 +27,6 @@ pipeline {
                 }
             }
         }
+
+    }
 }
