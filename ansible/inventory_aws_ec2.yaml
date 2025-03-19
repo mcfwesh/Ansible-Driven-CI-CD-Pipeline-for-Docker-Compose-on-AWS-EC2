@@ -1,6 +1,5 @@
 plugin: amazon.aws.aws_ec2
 regions:
   - us-east-1
-keyed_groups:
-  - key: tags.environment
-    prefix: env
+groups:
+  env_dev: "'t3.micro' in (instance_type)"
