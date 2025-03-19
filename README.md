@@ -26,27 +26,27 @@ The `Jenkinsfile` defines the CI/CD pipeline, which includes the following key s
 
 2.  **Prepare the Ansible server:** Copies Ansible playbooks, configuration files, and SSH keys to the Ansible server and installs necessary dependencies (Ansible, Python3, Boto3).
 
-3.  **Execute the Ansible playbook:** Configures the EC2 instances, installs Docker and Docker Compose, creates a user and adds them to the Docker group, and deploys the application's containers using `docker-compose.yaml`.  This project assumes that three EC2 instances are already running in AWS, as described in [Module 15c - Dynamically Deploy Ansible playbook in Terraform](https://gitlab.com/mcfwesh/module-15c-dynamically-deploy-ansible-playbook-in-terraform). Ansible automatically connects to these instances.
+3.  **Execute the Ansible playbook:** Configures the EC2 instances, installs Docker and Docker Compose, creates a user and adds them to the Docker group, and deploys the application's containers using `docker-compose.yaml`. This project assumes that three EC2 instances are already running in AWS, as described in [Module 15c - Dynamically Deploy Ansible playbook in Terraform](https://gitlab.com/mcfwesh/module-15c-dynamically-deploy-ansible-playbook-in-terraform). Ansible automatically connects to these instances.
 
 ## Key Configuration
 
--   **`Jenkinsfile`**: Defines the CI/CD pipeline.
-    -   `ANSIBLE_SERVER`: Ansible control node IP.
-    -   `VERSION`: Application version.
--   **`script.groovy`**: Contains functions for copying files and executing the playbook.
--   **`ansible/deploy-docker-ec2.yaml`**: Ansible playbook for EC2 configuration and deployment.
--   **`ansible/inventory_aws_ec2.yaml`**: Defines the dynamic inventory plugin for AWS EC2.
--   **`docker-compose.yaml`**: Defines the application's Docker containers.
--   **`prepare-ansible-server.sh`**: Installs Ansible and dependencies on the control node.
+- **`Jenkinsfile`**: Defines the CI/CD pipeline.
+  - `ANSIBLE_SERVER`: Ansible control node IP.
+  - `VERSION`: Application version.
+- **`script.groovy`**: Contains functions for copying files and executing the playbook.
+- **`ansible/deploy-docker-ec2.yaml`**: Ansible playbook for EC2 configuration and deployment.
+- **`ansible/inventory_aws_ec2.yaml`**: Defines the dynamic inventory plugin for AWS EC2.
+- **`docker-compose.yaml`**: Defines the application's Docker containers.
+- **`prepare-ansible-server.sh`**: Installs Ansible and dependencies on the control node.
 
 ## Technologies Used
 
--   Ansible
--   Jenkins
--   Docker
--   Docker Compose
--   EC2
--   Boto3
+- Ansible
+- Jenkins
+- Docker
+- Docker Compose
+- EC2
+- Boto3
 
 ## Pipeline Details
 
@@ -65,3 +65,7 @@ The Ansible playbook:
 3.  Deploys containers defined in `docker-compose.yaml`.
 
 ## Screenshots
+
+**Jenkins Pipeline Overview:**
+
+![Jenkins Pipeline Overview](jenkins.png)
