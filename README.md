@@ -2,7 +2,7 @@
 
 This project demonstrates a CI/CD pipeline using Jenkins and Ansible to deploy a Java Maven application within Docker containers on an Amazon EC2 instance. It uses a dedicated Ansible server.
 
-## Tasks from Module 15
+## Related Demo Tasks from Module 15
 
 ### **"Ansible Integration in Jenkins"**
 
