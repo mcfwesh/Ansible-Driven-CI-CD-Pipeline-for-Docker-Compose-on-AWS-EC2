@@ -1,4 +1,4 @@
-# Ansible-Driven CI/CD Pipeline for Docker Compose on AWS EC2
+# Ansible-Driven CI/CD for AWS EC2 Deployments
 
 This project demonstrates a CI/CD pipeline using Jenkins and Ansible to deploy a Java Maven application within Docker containers on Amazon EC2 instances. It uses a dedicated Ansible server and leverages the AWS inventory plugin for dynamic EC2 discovery.
 
