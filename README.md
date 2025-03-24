@@ -1,24 +1,26 @@
-# 15e: CI/CD Pipeline for Docker Compose Deployment on EC2 with Ansible
+# Ansible-Driven CI/CD Pipeline for Docker Compose on AWS EC2
 
-This project demonstrates a CI/CD pipeline using Jenkins and Ansible to deploy a Java Maven application within Docker containers on an Amazon EC2 instance. It uses a dedicated Ansible server.
+This project demonstrates a CI/CD pipeline using Jenkins and Ansible to deploy a Java Maven application within Docker containers on Amazon EC2 instances. It uses a dedicated Ansible server and leverages the AWS inventory plugin for dynamic EC2 discovery.
 
-## Related Demo Tasks from Module 15
+## Table of Contents
 
-### **"Ansible Integration in Jenkins"**
-
-- Automated Docker installation and configuration on an EC2 instance using Ansible.
+- [Project Overview](#project-overview)
+- [Implementation Steps](#implementation-steps)
+- [Key Configuration](#key-configuration)
+- [Technologies Used](#technologies-used)
+- [Pipeline Details](#pipeline-details)
+- [Ansible Playbook Details](#ansible-playbook-details)
+- [Screenshots](#screenshots)
 
 ## Project Overview
 
-This project automates the deployment of a containerized Java application stack on AWS EC2. It handles Docker installation, user management, and application deployment via Docker Compose.
-
-The pipeline:
+This project automates the deployment of a containerized Java application stack on AWS EC2, handling Docker installation, user management, and application deployment via Docker Compose. _Ansible, using the AWS inventory plugin, dynamically discovers and manages the target EC2 instances._ The pipeline utilizes Jenkins for orchestration and includes these key phases:
 
 1.  Loads custom functions from `script.groovy`.
 2.  Copies files to the Ansible server.
 3.  Executes the Ansible playbook to deploy the application.
 
-## Learning Progression/Steps
+## Implementation Steps
 
 The `Jenkinsfile` defines the CI/CD pipeline, which includes the following key steps:
 
@@ -26,7 +28,7 @@ The `Jenkinsfile` defines the CI/CD pipeline, which includes the following key s
 
 2.  **Prepare the Ansible server:** Copies Ansible playbooks, configuration files, and SSH keys to the Ansible server and installs necessary dependencies (Ansible, Python3, Boto3).
 
-3.  **Execute the Ansible playbook:** Configures the EC2 instances, installs Docker and Docker Compose, creates a user and adds them to the Docker group, and deploys the application's containers using `docker-compose.yaml`. This project assumes that three EC2 instances are already running in AWS, as described in [Module 15c - Dynamically Deploy Ansible playbook in Terraform](https://gitlab.com/mcfwesh/module-15c-dynamically-deploy-ansible-playbook-in-terraform). Ansible automatically connects to these instances.
+3.  **Execute the Ansible playbook:** Configures the EC2 instances, installs Docker and Docker Compose, creates a user and adds them to the Docker group, and deploys the application's containers using `docker-compose.yaml`.
 
 ## Key Configuration
 
@@ -41,12 +43,12 @@ The `Jenkinsfile` defines the CI/CD pipeline, which includes the following key s
 
 ## Technologies Used
 
-- Ansible
-- Jenkins
-- Docker
-- Docker Compose
-- EC2
-- Boto3
+- **Ansible:** Configuration management and automation.
+- **Jenkins:** CI/CD pipeline automation.
+- **Docker:** Containerization.
+- **Docker Compose:** Multi-container application definition.
+- **EC2:** Virtual servers in the cloud.
+- **Boto3:** AWS SDK for Python.
 
 ## Pipeline Details
 
@@ -68,4 +70,4 @@ The Ansible playbook:
 
 **Jenkins Pipeline Overview:**
 
-![Jenkins Pipeline Overview](jenkins.png)
+![Jenkins Pipeline Overview](screenshots/jenkins.png)
